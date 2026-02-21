@@ -30,8 +30,8 @@ export default function AboutPage() {
               maintaining strict standards and procedures.
             </p>
             <p>
-              Today, I serve as a Detective Sergeant focused on major crimes and
-              supporting troopers with active criminal investigations. In that role, I
+              Today, I serve as a independent detective focused on major crimes, such as fraud and identity theft, but not limited to.
+              In this role, I utilize the full range of investigative skills I have developed over nearly three decades, applying them to a variety of cases. I
               combine tactical decision-making with detailed analysis-evaluating
               information, identifying inconsistencies, and producing clear, court-ready
               documentation.
