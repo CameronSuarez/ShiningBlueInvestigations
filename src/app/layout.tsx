@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Shining Blue Investigations",
   description: "Private investigation services in Southwest Michigan.",
+  icons: {
+    icon: "/ShiningBlue_logo.png",
+    shortcut: "/ShiningBlue_logo.png",
+    apple: "/ShiningBlue_logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -34,4 +39,5 @@ export default function RootLayout({
     </html>
   );
 }
+
 
