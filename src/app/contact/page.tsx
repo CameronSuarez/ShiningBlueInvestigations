@@ -99,7 +99,7 @@ export default function ContactPage() {
                   <span className="font-medium">Email:</span> chriss1@shining-blue.com
                 </p>
               </div>
-              <p className="mt-4 text-sm text-zinc-600">Integrity • Discretion • Results</p>
+              <p className="mt-4 text-sm text-zinc-600">Integrity - Discretion - Results</p>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-nowrap">
                 <a
