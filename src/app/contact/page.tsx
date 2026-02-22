@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { FormEvent, useState } from "react";
 import Image from "next/image";
@@ -10,37 +10,62 @@ export default function ContactPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setSuccess("");
 
-    if (!fullName.trim() || !email.trim() || !message.trim()) {
+    const trimmedFullName = fullName.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+    const trimmedMessage = message.trim();
+
+    if (!trimmedFullName || !trimmedEmail || !trimmedMessage) {
       setError("Please complete Full Name, Email, and Message.");
       return;
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
+    if (!emailPattern.test(trimmedEmail)) {
       setError("Please enter a valid email address.");
       return;
     }
 
-    const subject = encodeURIComponent("Website Consultation Request");
-    const body = encodeURIComponent(
-      [
-        `Full Name: ${fullName}`,
-        `Email: ${email}`,
-        `Phone: ${phone || "N/A"}`,
-        "",
-        "Message:",
-        message,
-      ].join("\n"),
-    );
+    setIsSubmitting(true);
 
-    window.location.href = `mailto:chriss1@shining-blue.com?subject=${subject}&body=${body}`;
-    setSuccess("Thanks-your message is ready to send.");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: trimmedFullName,
+          email: trimmedEmail,
+          phone: trimmedPhone,
+          message: trimmedMessage,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data?.error || "Unable to send your message right now. Please try again.");
+        return;
+      }
+
+      setSuccess("Thank you. Your message has been sent.");
+      setFullName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+    } catch {
+      setError("Unable to send your message right now. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -74,7 +99,7 @@ export default function ContactPage() {
                   <span className="font-medium">Email:</span> chriss1@shining-blue.com
                 </p>
               </div>
-              <p className="mt-4 text-sm text-zinc-600">Integrity â€¢ Discretion â€¢ Results</p>
+              <p className="mt-4 text-sm text-zinc-600">Integrity • Discretion • Results</p>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-nowrap">
                 <a
@@ -82,12 +107,6 @@ export default function ContactPage() {
                   className="inline-flex rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800"
                 >
                   Call Now
-                </a>
-                <a
-                  href="mailto:chriss1@shining-blue.com"
-                  className="inline-flex rounded-md border border-zinc-900 px-5 py-2.5 text-sm font-semibold text-zinc-900 hover:bg-zinc-100"
-                >
-                  Email
                 </a>
               </div>
 
@@ -164,9 +183,10 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="inline-flex rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800"
+              disabled={isSubmitting}
+              className="inline-flex rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Send Message
+              {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>
         </section>
@@ -174,4 +194,3 @@ export default function ContactPage() {
     </main>
   );
 }
-
